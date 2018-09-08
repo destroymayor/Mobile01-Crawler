@@ -53,6 +53,12 @@ const getWebSiteContent = async url => {
   });
 };
 
+// getWebSiteContent("https://www.mobile01.com/topiclist.php?f=291&p=");
+
 for (let i = 0; i < 10; i++) {
-  getWebSiteContent("https://www.mobile01.com/topiclist.php?f=291&p=" + i);
+  (num => {
+    setTimeout(() => {
+      getWebSiteContent("https://www.mobile01.com/topiclist.php?f=291&p=" + num);
+    }, 1000 * (i + 1));
+  })(i);
 }
