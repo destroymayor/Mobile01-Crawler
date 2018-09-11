@@ -1,4 +1,4 @@
-import { modeFast, mode, combinationsReplacement, combinations } from "simple-statistics";
+import { modeFast, combinations } from "simple-statistics";
 import nodejieba from "nodejieba";
 import fs from "fs";
 
@@ -22,17 +22,15 @@ readFileAsync("./data/Regulation.json")
   .then(data => {
     const jsonData = JSON.parse(data);
     jsonData.Regulation.map(RegulationValue => {
-      console.log(RegulationValue);
-      const statisticsList = [];
+      const KeywordList = [];
       nodejieba.extract(RegulationValue, 10).map(item => {
-        console.log(item);
         nodejieba.tag(item.word).map(TagValue => {
           if (TagValue.tag == "n") {
-            statisticsList.push(TagValue.word);
+            KeywordList.push(TagValue.word);
           }
         });
       });
-      console.log(statisticsList);
+      console.log(combinations(KeywordList, 2));
     });
   })
   .catch(err => {

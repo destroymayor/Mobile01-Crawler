@@ -14,7 +14,7 @@ const readFileAsync = path => {
   });
 };
 
-// 檔案寫入  json預設需有一個array
+// file write  json預設需有一個array
 const exportResults = (parsedResults, coverFile) => {
   readFileAsync(coverFile)
     .then(data => {
@@ -39,9 +39,7 @@ const getWebSiteContent = async (url, coverFile) => {
       $(".subject > span > a").each((index, value) => {
         linkList.push({ link: "https://www.mobile01.com/" + $(value).attr("href"), page: $(".numbers").text() });
       });
-    } catch (error) {
-      //console.log(error);
-    }
+    } catch (error) {}
   };
 
   const result = [];
@@ -100,6 +98,7 @@ const asyncForEach = async (array, callback) => {
 // forum = 討論區代號
 // startCode = 從第幾頁開始爬
 // total = 該討論區總共頁數
+// output = 輸出路徑
 const StartCrawler = async (forum, startCode, totalCode) => {
   const list = [];
   for (let i = startCode; i < totalCode; i++) {
@@ -107,29 +106,9 @@ const StartCrawler = async (forum, startCode, totalCode) => {
   }
   await asyncForEach(list, async num => {
     await waitFor(10000);
-    getWebSiteContent("https://www.mobile01.com/topiclist.php?f=" + forum + "&p=" + num, "./data/result.json");
+    getWebSiteContent("https://www.mobile01.com/topiclist.php?f=" + forum + "&p=" + num, output);
   });
   console.log("Done");
 };
 
-// file merger
-const fileMerger = () => {
-  readFileAsync("./data/data.json").then(data => {
-    const list = JSON.parse(data).articles;
-
-    readFileAsync("./data/question.json").then(question => {
-      console.log(JSON.parse(question));
-      JSON.parse(question).map(item => {
-        list.push(item);
-      });
-      let result = {
-        article: list
-      };
-      fs_writeFile("./data/question2.json", JSON.stringify(result), err => {
-        if (err) console.log("write", err);
-      });
-    });
-  });
-};
-
-StartCrawler(692, 1, 2);
+StartCrawler(692, 1, 2, "./data/result.json");
