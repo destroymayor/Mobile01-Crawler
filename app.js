@@ -1,4 +1,4 @@
-import { modeFast, combinations } from "simple-statistics";
+import { combinations } from "simple-statistics";
 import nodejieba from "nodejieba";
 import fs from "fs";
 
@@ -21,8 +21,9 @@ const readFileAsync = path => {
 readFileAsync("./data/Regulation.json")
   .then(data => {
     const jsonData = JSON.parse(data);
+    const Result = [];
+    const KeywordList = [];
     jsonData.Regulation.map(RegulationValue => {
-      const KeywordList = [];
       nodejieba.extract(RegulationValue, 10).map(item => {
         nodejieba.tag(item.word).map(TagValue => {
           if (TagValue.tag == "n") {
@@ -30,7 +31,21 @@ readFileAsync("./data/Regulation.json")
           }
         });
       });
-      console.log(combinations(KeywordList, 2));
+    });
+
+    const NounList = [];
+    combinations(KeywordList, 2).map(item => {
+      NounList.push({
+        n: item
+      });
+    });
+
+    Result.push({
+      Noun: NounList
+    });
+    console.log(Result);
+    fs_writeFile("./data/Combination.json", JSON.stringify(Result), err => {
+      if (err) console.log("write", err);
     });
   })
   .catch(err => {
