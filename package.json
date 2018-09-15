@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon --watch src --exec babel-watch ./index.js",
-    "app": "nodemon --watch src --exec babel-watch ./src/app.js",
-    "traindata": "nodemon --watch src --exec babel-watch ./src/TrainDataProcess.js",
+    "app": "nodemon --watch src --exec babel-watch ./src/other/app.js",
+    "trainData": "nodemon --watch src --exec babel-watch ./src/other/TrainDataProcess.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

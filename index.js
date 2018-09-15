@@ -8,6 +8,7 @@ import { waitFor, asyncForEach } from "./src/delayFunction";
 
 const getWebSiteContent = async (url, coverFile) => {
   const linkList = [];
+  //取得每一頁的文章url
   const RequestLink = async () => {
     try {
       const ResponseHTML = await axios.get(url);
