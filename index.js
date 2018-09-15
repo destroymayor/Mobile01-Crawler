@@ -79,4 +79,5 @@ const StartCrawler = async (forum, startCode, totalCode, output) => {
   console.log("Done");
 };
 
-StartCrawler(692, 1, 2, "./data/result.json", "./data/result.json");
+StartCrawler(692, 1, 5, "./data/result.json");
+// 欲寫入的json需預設有一個Array

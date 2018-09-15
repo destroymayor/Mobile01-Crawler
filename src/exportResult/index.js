@@ -12,7 +12,7 @@ const readFileAsync = path => {
   });
 };
 
-// file write  json預設需有一個array
+// file write
 const exportResults = (parsedResults, coverFile) => {
   readFileAsync(coverFile)
     .then(data => {
