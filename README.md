@@ -4,7 +4,7 @@
 
 ### 1.執行函數
 
-    StartCrawler(forum, startCode, total, output);
+    StartCrawler(forum, startCode, total, output);
 
     forum = 討論區代號
     startCode = 從第幾頁開始爬
