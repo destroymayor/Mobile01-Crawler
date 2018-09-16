@@ -10,47 +10,42 @@ const getWebSiteContent = async (url, coverFile) => {
   const linkList = [];
   //取得每一頁的文章url
   const RequestLink = async () => {
-    try {
-      const ResponseHTML = await axios.get(url);
-      const $ = cheerio.load(ResponseHTML.data);
-      $(".subject > span > a").each((index, value) => {
-        linkList.push({ link: "https://www.mobile01.com/" + $(value).attr("href"), page: $(".numbers").text() });
-      });
-    } catch (error) {}
+    const ResponseHTML = await axios.get(url);
+    const $ = cheerio.load(ResponseHTML.data);
+    await $(".subject > span > a").each((index, value) => {
+      linkList.push({ link: "https://www.mobile01.com/" + $(value).attr("href"), page: $(".numbers").text() });
+    });
   };
 
   const result = [];
   const RequestDataAsync = async (url, page) => {
-    try {
-      const ResponseHTML = await axios.get(url);
-      const $ = cheerio.load(ResponseHTML.data);
-
-      //主題回覆 list
-      const ReplyList = [];
-      $(".single-post-content").map((index, value) => {
-        ReplyList.push(
-          $(".single-post-content")
-            .eq(index + 1)
-            .text()
-            .replace(new RegExp("\\n|\\s+|{|}|\"|'", "g"), "")
-        );
-      });
-
-      result.push({
-        article_title: $("#forum-content-main > h1")
-          .first()
-          .text(),
-        content: $(".single-post-content")
-          .first()
+    const ResponseHTML = await axios.get(url);
+    const $ = cheerio.load(ResponseHTML.data);
+    //主題回覆 list
+    const ReplyList = [];
+    await $(".single-post-content").map(index => {
+      ReplyList.push(
+        $(".single-post-content")
+          .eq(index + 1)
           .text()
-          .replace(new RegExp("\\n|\\s+|{|}|\"|'", "g"), ""),
-        messages: ReplyList,
-        page: page
-      });
+          .replace(new RegExp("\\n|\\s+|{|}|\"|'", "g"), "")
+      );
+    });
 
-      console.log(page, new Date().toString());
-    } catch (error) {}
+    await result.push({
+      article_title: $("#forum-content-main > h1")
+        .first()
+        .text(),
+      content: $(".single-post-content")
+        .first()
+        .text()
+        .replace(new RegExp("\\n|\\s+|{|}|\"|'", "g"), ""),
+      messages: ReplyList,
+      page: page
+    });
+
     await exportResults(result, coverFile);
+    await console.log(page, new Date().toString());
   };
 
   Promise.resolve()
@@ -77,8 +72,7 @@ const StartCrawler = async (forum, startCode, totalCode, output) => {
     await waitFor(5000);
     getWebSiteContent("https://www.mobile01.com/topiclist.php?f=" + forum + "&p=" + num, output);
   });
-  console.log("Done");
 };
 
-StartCrawler(692, 1, 5, "./data/result.json");
+StartCrawler(692, 1, 15, "./data/result.json");
 // 欲寫入的json需預設有一個Array
