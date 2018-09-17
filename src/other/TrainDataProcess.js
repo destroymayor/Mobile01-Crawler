@@ -14,43 +14,43 @@ const splitMulti = (str, tokens) => {
   return str;
 };
 
-fs.readFile("./data/291.json", "utf-8", (err, data) => {
-  JSON.parse(data).article.map(item => {
-    const CutTitle = nodejieba.cut(item.article_title).join(" ");
-    const CutContent = nodejieba.cut(item.content).join(" ");
-    const CutReply = nodejieba.cut(item.messages).join(" ");
-    splitMulti(CutTitle, [",", "，", "。", "？", "?"]).map(value => {
-      if (value.length >= 5 && value.length <= 100) {
-        const result = value.replace(
-          new RegExp("[`~!@#$^&*()=|{}':;',\\[\\].<>/?~！@#￥……&*（）——|{}【】‘；：”“'。，、？%+_]", "g"),
-          ""
-        );
-        fs.appendFileSync("./output/train.txt", result + "\n", err => {
-          if (err) throw err;
-        });
-      }
-    });
-    splitMulti(CutContent, [",", "，", "。", "？", "?"]).map(value => {
-      if (value.length >= 10 && value.length <= 100) {
-        const result = value.replace(
-          new RegExp("[`~!@#$^&*()=|{}':;',\\[\\].<>/?~！@#￥……&*（）——|{}【】‘；：”“'。，、？%+_]", "g"),
-          ""
-        );
-        fs.appendFileSync("./output/train.txt", result + "\n", err => {
-          if (err) throw err;
-        });
-      }
-    });
-    splitMulti(CutReply, [",", "，", "。", "？", "?"]).map(value => {
-      if (value.length >= 10 && value.length <= 100) {
-        const result = value.replace(
-          new RegExp("[`~!@#$^&*()=|{}':;',\\[\\].<>/?~！@#￥……&*（）——|{}【】‘；：”“'。，、？%+_]", "g"),
-          ""
-        );
-        fs.appendFileSync("./output/train1.txt", result + "\n", err => {
-          if (err) throw err;
-        });
-      }
+const TrainDataProcess = (input, output) => {
+  fs.readFile(input, "utf-8", (err, data) => {
+    Object.values(JSON.parse(data).article).map(item => {
+      const CutTitle = nodejieba.cut(item.article_title).join(" ");
+      const CutContent = nodejieba.cut(item.content).join(" ");
+      const CutReply = nodejieba.cut(item.messages).join(" ");
+
+      const regex = "[`~!@#$^&*()=|{}':;',\\[\\].<>/?~！@#￥……&*（）——|{}【】‘；：”“'。，、？%+_]";
+
+      splitMulti(CutTitle, [",", "，", "。", "？", "?"]).map(value => {
+        if (value.length >= 5 && value.length <= 100) {
+          const result = value.replace(new RegExp(regex, "g"), "");
+          fs.appendFileSync(output, result + "\n", err => {
+            if (err) throw err;
+          });
+        }
+      });
+
+      splitMulti(CutContent, [",", "，", "。", "？", "?"]).map(value => {
+        if (value.length >= 10 && value.length <= 100) {
+          const result = value.replace(new RegExp(regex, "g"), "");
+          fs.appendFileSync(output, result + "\n", err => {
+            if (err) throw err;
+          });
+        }
+      });
+
+      splitMulti(CutReply, [",", "，", "。", "？", "?"]).map(value => {
+        if (value.length >= 10 && value.length <= 100) {
+          const result = value.replace(new RegExp(regex, "g"), "");
+          fs.appendFileSync(output, result + "\n", err => {
+            if (err) throw err;
+          });
+        }
+      });
     });
   });
-});
+};
+
+TrainDataProcess("./data/291.json", "./output/train1.txt");
