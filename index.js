@@ -65,7 +65,7 @@ const getWebSiteContent = async (url, coverFile) => {
 // output = 輸出路徑
 const StartCrawler = async (forum, startCode, totalCode, output) => {
   const list = [];
-  for (let i = startCode; i < totalCode; i++) {
+  for (let i = startCode; i <= totalCode; i++) {
     list.push(i);
   }
   await asyncForEach(list, async num => {
@@ -74,5 +74,5 @@ const StartCrawler = async (forum, startCode, totalCode, output) => {
   });
 };
 
-StartCrawler(692, 1, 15, "./data/result.json");
+StartCrawler(692, 1, 2, "./data/result.json");
 // 欲寫入的json需預設有一個Array

@@ -18,8 +18,6 @@ const readFileAsync = path => {
   });
 };
 
-const combinationsArray = array => {};
-
 readFileAsync("./data/Regulation1.json")
   .then(data => {
     const jsonData = JSON.parse(data);
