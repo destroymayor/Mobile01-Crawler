@@ -6,7 +6,8 @@ import util from "util";
 const fs_writeFile = util.promisify(fs.writeFileSync);
 
 nodejieba.load({
-  dict: "./jieba/dict.txt"
+  dict: "./jieba/dict.txt",
+  stopWordDict: "./jieba/stop_words.utf8"
 });
 
 const readFileAsync = path => {
