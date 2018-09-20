@@ -1,6 +1,9 @@
 import fs from "fs";
 import nodejieba from "nodejieba";
 
+import util from "util";
+const fs_writeFile = util.promisify(fs.writeFileSync);
+
 nodejieba.load({
   dict: "./jieba/dict.txt",
   stopWordDict: "./jieba/stop_words.utf8",
@@ -23,6 +26,14 @@ const writeAsyncFile = (output, result) => {
       if (err) throw err;
       resolve(data);
     });
+
+    //組合生成句用的
+    // const combinationsReplaceList = {
+    //   articles: result
+    // };
+    // fs_writeFile(output, JSON.stringify(combinationsReplaceList), err => {
+    //   if (err) console.log("write", err);
+    // });
   });
 };
 
@@ -36,6 +47,7 @@ const splitMulti = (str, tokens) => {
 };
 
 const TrainDataProcess = (input, output) => {
+  const outputJSON = [];
   readFileAsync(input).then(data => {
     Object.values(JSON.parse(data).articles).map(item => {
       const InterrogativeSentenceRegexPattern = "\\?|？|為什麼|嗎|如何|如果|若要|是否|請將|可能|多少"; //疑問句pattern
@@ -69,6 +81,9 @@ const TrainDataProcess = (input, output) => {
         splitMulti(CutTitle, [",", "，", "。", "？", "?"]).map(value => {
           const result = value.replace(/\s\s+/g, " ").replace(/^ /g, ""); //去空白跟起頭空白
           if (result.length >= 5 && result.length <= 100) {
+            // outputJSON.push({
+            //   article_title: result
+            // });
             writeAsyncFile(output, result);
           }
         });
@@ -77,7 +92,7 @@ const TrainDataProcess = (input, output) => {
         splitMulti(CutContent, [",", "，", "。", "？", "?"]).map(value => {
           const result = value.replace(/\s\s+/g, " ").replace(/^ /g, ""); //去空白跟起頭空白
           if (result.length >= 10 && result.length <= 100) {
-            writeAsyncFile(output, result);
+            // writeAsyncFile(output, result);
           }
         });
 
@@ -85,7 +100,7 @@ const TrainDataProcess = (input, output) => {
         splitMulti(CutReply, [",", "，", "。", "？", "?"]).map(value => {
           const result = value.replace(/\s\s+/g, " ").replace(/^ /g, ""); //去空白跟起頭空白
           if (result.length >= 10 && result.length <= 100) {
-            writeAsyncFile(output, result);
+            //writeAsyncFile(output, result);
           }
         });
       }
@@ -93,4 +108,4 @@ const TrainDataProcess = (input, output) => {
   });
 };
 
-TrainDataProcess("./data/PTT_finance.json", "./output/train1.txt");
+TrainDataProcess("./data/PTT_finance.json", "./output/data.json");
