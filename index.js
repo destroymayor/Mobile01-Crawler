@@ -74,5 +74,5 @@ const StartCrawler = async (forum, startCode, totalCode, output) => {
   });
 };
 
-StartCrawler(692, 1, 2, "./data/result.json");
+StartCrawler(692, 1, 2, "./output/result.json");
 // 欲寫入的json需預設有一個Array

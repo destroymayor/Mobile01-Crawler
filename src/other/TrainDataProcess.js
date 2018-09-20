@@ -3,8 +3,28 @@ import nodejieba from "nodejieba";
 
 nodejieba.load({
   dict: "./jieba/dict.txt",
-  stopWordDict: "./jieba/stop_words.utf8"
+  stopWordDict: "./jieba/stop_words.utf8",
+  userDict: "./jieba/userDict.utf8"
 });
+
+// read file async
+const readFileAsync = path => {
+  return new Promise((resolve, reject) => {
+    fs.readFile(path, "utf-8", (err, data) => {
+      if (err) reject(err);
+      resolve(data);
+    });
+  });
+};
+
+const writeAsyncFile = (output, result) => {
+  return new Promise((resolve, reject) => {
+    fs.appendFileSync(output, result + "\n", err => {
+      if (err) throw err;
+      resolve(data);
+    });
+  });
+};
 
 const splitMulti = (str, tokens) => {
   let tempChar = tokens[0];
@@ -15,47 +35,62 @@ const splitMulti = (str, tokens) => {
   return str;
 };
 
-const writeAsyncFile = (output, result) => {
-  fs.appendFileSync(output, result + "\n", err => {
-    if (err) throw err;
-  });
-};
-
 const TrainDataProcess = (input, output) => {
-  fs.readFile(input, "utf-8", (err, data) => {
-    Object.values(JSON.parse(data).article).map(item => {
-      const InterrogativeSentenceRegexPattern = "？|為什麼|嗎|如何|如果|若要|是否|請將|可能|多少";
-      const SpecialSymbolRegex = "[`~!@#$^&*()=|{}':;'\\[\\].<>/?~！@#￥……&*（）——|{}【】‘”“'%+_]";
+  readFileAsync(input).then(data => {
+    Object.values(JSON.parse(data).articles).map(item => {
+      const InterrogativeSentenceRegexPattern = "\\?|？|為什麼|嗎|如何|如果|若要|是否|請將|可能|多少"; //疑問句pattern
+
+      const NumberCode = "\\d+";
+      const SpecialSymbolCode = "[`-~～!@#$^&*()=|{}'：；:;'\\[\\].<>/?~！@#￥……&*（）——|{}《》【】．、‘”“'%+_]";
+      const EmojiCode = "([\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2694-\u2697]|\uD83E[\uDD10-\uDD5D])";
+
+      const title = item.article_title
+        .replace(new RegExp(SpecialSymbolCode, "g"), "") //特殊符號取代
+        .replace(new RegExp(NumberCode, "g"), "Number") //將數字以特定文字代替
+        .replace(/  +/g, ""); //去多餘空白
+
+      const content = item.content
+        .replace(new RegExp(SpecialSymbolCode, "g"), "") //特殊符號取代
+        .replace(new RegExp(NumberCode, "g"), "Number") //將數字以特定文字代替
+        .replace(/  +/g, ""); // 去多餘空白
+
+      const reply = [];
+      item.messages.map(item => {
+        const replyItem = item
+          .replace(new RegExp(SpecialSymbolCode, "g"), "") //特殊符號取代
+          .replace(new RegExp(NumberCode, "g"), "Number")
+          .replace(new RegExp(EmojiCode, "g"), "") //將數字以特定文字代替
+          .replace(/  +/g, ""); // 去多餘空白
+        reply.push(replyItem);
+      });
 
       if (item.article_title.match(new RegExp(InterrogativeSentenceRegexPattern, "g"))) {
-        console.log(item.article_title);
-        const CutTitle = nodejieba.cut(item.article_title).join(" ");
-        const CutContent = nodejieba.cut(item.content).join(" ");
-        const CutReply = nodejieba.cut(item.messages).join(" ");
-
+        const CutTitle = nodejieba.cut(title, true).join(" ");
         splitMulti(CutTitle, [",", "，", "。", "？", "?"]).map(value => {
-          if (value.length >= 5 && value.length <= 100) {
-            //  const result = value.replace(new RegExp(SpecialSymbolRegex, "g"), "");
-            writeAsyncFile(output, value);
-          }
-        });
-
-        splitMulti(CutContent, [",", "，", "。", "？", "?"]).map(value => {
-          if (value.length >= 10 && value.length <= 100) {
-            const result = value.replace(new RegExp(SpecialSymbolRegex, "g"), "");
+          const result = value.replace(/\s\s+/g, " ").replace(/^ /g, ""); //去空白跟起頭空白
+          if (result.length >= 5 && result.length <= 100) {
             writeAsyncFile(output, result);
           }
         });
 
-        // splitMulti(CutReply, [",", "，", "。", "？", "?"]).map(value => {
-        //   if (value.length >= 10 && value.length <= 100) {
-        //     const result = value.replace(new RegExp(SpecialSymbolRegex, "g"), "");
-        //     writeAsyncFile(output, result);
-        //   }
-        // });
+        const CutContent = nodejieba.cut(content, true).join(" ");
+        splitMulti(CutContent, [",", "，", "。", "？", "?"]).map(value => {
+          const result = value.replace(/\s\s+/g, " ").replace(/^ /g, ""); //去空白跟起頭空白
+          if (result.length >= 10 && result.length <= 100) {
+            writeAsyncFile(output, result);
+          }
+        });
+
+        const CutReply = nodejieba.cut(reply, true).join(" ");
+        splitMulti(CutReply, [",", "，", "。", "？", "?"]).map(value => {
+          const result = value.replace(/\s\s+/g, " ").replace(/^ /g, ""); //去空白跟起頭空白
+          if (result.length >= 10 && result.length <= 100) {
+            writeAsyncFile(output, result);
+          }
+        });
       }
     });
   });
 };
 
-TrainDataProcess("./data/291.json", "./output/train1.txt");
+TrainDataProcess("./data/PTT_finance.json", "./output/train1.txt");

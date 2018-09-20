@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon --watch src --exec babel-watch ./index.js",
-    "app": "nodemon --watch src --exec babel-watch ./src/other/app.js",
+    "app": "nodemon --watch src --exec babel-watch ./src/other/AnswerPretreatment.js",
     "trainData": "nodemon --watch src --exec babel-watch ./src/other/TrainDataProcess.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
