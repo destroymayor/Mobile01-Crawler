@@ -84,7 +84,7 @@ const TrainDataProcess = (input, output) => {
             // outputJSON.push({
             //   article_title: result
             // });
-            writeAsyncFile(output, result);
+            //writeAsyncFile(output, result);
           }
         });
 
@@ -105,7 +105,9 @@ const TrainDataProcess = (input, output) => {
         });
       }
     });
+
+    //writeAsyncFile(output, outputJSON);
   });
 };
 
-TrainDataProcess("./data/PTT_finance.json", "./output/data.json");
+TrainDataProcess("./data/291.json", "./output/data291.json");
