@@ -2,7 +2,7 @@ import axios from "axios";
 import cheerio from "cheerio";
 
 //寫入檔案
-import { exportResults } from "./src/exportResult";
+import { exportResults, readFileAsync, fs_writeFile } from "./src/exportResult";
 //延遲執行
 import { waitFor, asyncForEach } from "./src/delayFunction";
 
@@ -17,7 +17,7 @@ const getWebSiteContent = async (url, coverFile) => {
     });
   };
 
-  const result = [];
+  const crawlerList = [];
   const RequestDataAsync = async (url, page) => {
     const ResponseHTML = await axios.get(url);
     const $ = cheerio.load(ResponseHTML.data);
@@ -32,7 +32,7 @@ const getWebSiteContent = async (url, coverFile) => {
       );
     });
 
-    await result.push({
+    await crawlerList.push({
       article_title: $("#forum-content-main > h1")
         .first()
         .text(),
@@ -44,7 +44,7 @@ const getWebSiteContent = async (url, coverFile) => {
       page: page
     });
 
-    await exportResults(result, coverFile);
+    await exportResults(crawlerList, coverFile);
     await console.log(page, new Date().toString());
   };
 
@@ -74,5 +74,29 @@ const StartCrawler = async (forum, startCode, totalCode, output) => {
   });
 };
 
-StartCrawler(692, 1, 2, "./output/result.json");
+//file merger
+const fileMerger = (mainFile, mergerFile, output) => {
+  readFileAsync(mainFile).then(mainFileData => {
+    const mainDataList = JSON.parse(mainFileData);
+    console.log(mainDataList.length);
+
+    readFileAsync(mergerFile).then(mergerFileData => {
+      console.log(JSON.parse(mergerFileData).length);
+
+      JSON.parse(mergerFileData).map(item => {
+        mainDataList.push(item);
+      });
+
+      console.log("total length", mainDataList.length);
+
+      fs_writeFile(output, JSON.parse(mainDataList), err => {
+        if (err) console.log("write", err);
+      });
+    });
+  });
+};
+
+//StartCrawler(692, 1, 2, "./output/result.json");
 // 欲寫入的json需預設有一個Array
+
+//fileMerger();

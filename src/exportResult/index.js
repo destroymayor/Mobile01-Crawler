@@ -28,4 +28,4 @@ const exportResults = (parsedResults, coverFile) => {
     .catch(err => {});
 };
 
-export { exportResults };
+export { exportResults, readFileAsync, fs_writeFile };
