@@ -2,9 +2,16 @@ import axios from "axios";
 import cheerio from "cheerio";
 
 //寫入檔案
-import { exportResults, readFileAsync, fs_writeFile } from "./src/exportResult";
+import {
+  exportResults,
+  readFileAsync,
+  fs_writeFile
+} from "./src/exportResult";
 //延遲執行
-import { waitFor, asyncForEach } from "./src/delayFunction";
+import {
+  waitFor,
+  asyncForEach
+} from "./src/delayFunction";
 
 const getWebSiteContent = async (url, coverFile) => {
   const linkList = [];
@@ -13,7 +20,10 @@ const getWebSiteContent = async (url, coverFile) => {
     const ResponseHTML = await axios.get(url);
     const $ = cheerio.load(ResponseHTML.data);
     await $(".subject > span > a").each((index, value) => {
-      linkList.push({ link: "https://www.mobile01.com/" + $(value).attr("href"), page: $(".numbers").text() });
+      linkList.push({
+        link: "https://www.mobile01.com/" + $(value).attr("href"),
+        page: $(".numbers").text()
+      });
     });
   };
 
@@ -26,9 +36,9 @@ const getWebSiteContent = async (url, coverFile) => {
     await $(".single-post-content").map(index => {
       ReplyList.push(
         $(".single-post-content")
-          .eq(index + 1)
-          .text()
-          .replace(new RegExp("\\n|\\s+|{|}|\"|'", "g"), "")
+        .eq(index + 1)
+        .text()
+        .replace(new RegExp("\\n|\\s+|{|}|\"|'", "g"), "")
       );
     });
 
@@ -44,8 +54,8 @@ const getWebSiteContent = async (url, coverFile) => {
       page: page
     });
 
-    await exportResults(crawlerList, coverFile);
-    await console.log(page, new Date().toString());
+    //await exportResults(crawlerList, coverFile);
+    //await console.log(page, new Date().toString());
   };
 
   Promise.resolve()
@@ -69,8 +79,8 @@ const StartCrawler = async (forum, startCode, totalCode, output) => {
     list.push(i);
   }
   await asyncForEach(list, async num => {
-    await waitFor(5000);
-    getWebSiteContent("https://www.mobile01.com/topiclist.php?f=" + forum + "&p=" + num, output);
+    await waitFor(1000);
+    await getWebSiteContent("https://www.mobile01.com/topiclist.php?f=" + forum + "&p=" + num, output);
   });
 };
 
@@ -96,7 +106,7 @@ const fileMerger = (mainFile, mergerFile, output) => {
   });
 };
 
-//StartCrawler(692, 1, 2, "./output/result.json");
+StartCrawler(569, 1, 1, "./data/output/result.json");
 // 欲寫入的json需預設有一個Array
 
 //fileMerger();

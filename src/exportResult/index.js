@@ -21,11 +21,15 @@ const exportResults = (parsedResults, coverFile) => {
         jsonData.push(item);
       });
 
-      fs_writeFile(coverFile, JSON.stringify(jsonData), err => {
+      fs_writeFile(coverFile, JSON.stringify(jsonData, null, 2), err => {
         if (err) console.log("write", err);
       });
     })
     .catch(err => {});
 };
 
-export { exportResults, readFileAsync, fs_writeFile };
+export {
+  exportResults,
+  readFileAsync,
+  fs_writeFile
+};
