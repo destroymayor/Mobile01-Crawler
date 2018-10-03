@@ -2,16 +2,9 @@ import axios from "axios";
 import cheerio from "cheerio";
 
 //寫入檔案
-import {
-  exportResults,
-  readFileAsync,
-  fs_writeFile
-} from "./src/exportResult";
+import { exportResults, readFileAsync, fs_writeFile } from "./src/exportResult";
 //延遲執行
-import {
-  waitFor,
-  asyncForEach
-} from "./src/delayFunction";
+import { waitFor, asyncForEach } from "./src/delayFunction";
 
 const getWebSiteContent = async (url, coverFile) => {
   const linkList = [];
@@ -36,9 +29,9 @@ const getWebSiteContent = async (url, coverFile) => {
     await $(".single-post-content").map(index => {
       ReplyList.push(
         $(".single-post-content")
-        .eq(index + 1)
-        .text()
-        .replace(new RegExp("\\n|\\s+|{|}|\"|'", "g"), "")
+          .eq(index + 1)
+          .text()
+          .replace(new RegExp("\\n|\\s+|{|}|\"|'", "g"), "")
       );
     });
 
