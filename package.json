@@ -8,7 +8,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "push": "git add . && git ci -m . && git push -u origin master"
   },
-  "keywords": [],
+  "keywords": ["Crawler", "Mobile01", "node.js", "axios", "cheerio"],
   "author": "",
   "license": "MIT",
   "devDependencies": {
