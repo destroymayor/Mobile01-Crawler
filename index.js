@@ -77,7 +77,7 @@ const StartCrawler = async (forum, startCode, totalCode, output) => {
   });
 };
 
-//file merger
+//用於合併兩個json
 const fileMerger = (mainFile, mergerFile, output) => {
   readFileAsync(mainFile).then(mainFileData => {
     const mainDataList = JSON.parse(mainFileData);
