@@ -25,7 +25,7 @@ const exportResults = (parsedResults, coverFile) => {
         if (err) console.log("write", err);
       });
     })
-    .catch(err => { });
+    .catch(err => {});
 };
 
 export { exportResults, readFileAsync, fs_writeFile };
