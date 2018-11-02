@@ -17,6 +17,7 @@ const exportResults = (parsedResults, coverFile) => {
   readFileAsync(coverFile)
     .then(data => {
       const jsonData = JSON.parse(data);
+
       parsedResults.map(item => {
         jsonData.push(item);
       });
@@ -24,8 +25,9 @@ const exportResults = (parsedResults, coverFile) => {
       fs_writeFile(coverFile, JSON.stringify(jsonData, null, 2), err => {
         if (err) console.log("write", err);
       });
+
     })
-    .catch(err => {});
+    .catch(err => { });
 };
 
 export { exportResults, readFileAsync, fs_writeFile };
