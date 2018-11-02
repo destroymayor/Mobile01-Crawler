@@ -4,11 +4,17 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon --watch src --exec babel-watch ./index.js",
+    "dev": "babel-watch ./index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "push": "git add . && git ci -m . && git push -u origin master"
   },
-  "keywords": ["Crawler", "Mobile01", "node.js", "axios", "cheerio"],
+  "keywords": [
+    "Crawler",
+    "Mobile01",
+    "node.js",
+    "axios",
+    "cheerio"
+  ],
   "author": "",
   "license": "MIT",
   "devDependencies": {
@@ -18,8 +24,7 @@
     "babel-plugin-transform-es2015-parameters": "^6.24.1",
     "babel-plugin-transform-es2015-spread": "^6.22.0",
     "babel-plugin-transform-strict-mode": "^6.24.1",
-    "babel-watch": "^2.0.7",
-    "nodemon": "^1.18.4"
+    "babel-watch": "^2.0.7"
   },
   "dependencies": {
     "axios": "^0.18.0",
