@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "babel-watch ./index.js",
+    "dev": "babel-watch index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "push": "git add . && git ci -m . && git push -u origin master"
   },

@@ -12,6 +12,16 @@ const readFileAsync = path => {
   });
 };
 
+const writeFileAsync = (path, data) => {
+  return new Promise((resolve, reject) => {
+    fs_writeFile(path, JSON.stringify(data, null, 2), err => {
+      if (err) reject(err);
+
+      resolve(data);
+    });
+  });
+};
+
 // file write
 const exportResults = (parsedResults, coverFile) => {
   readFileAsync(coverFile)
@@ -22,12 +32,9 @@ const exportResults = (parsedResults, coverFile) => {
         jsonData.push(item);
       });
 
-      fs_writeFile(coverFile, JSON.stringify(jsonData, null, 2), err => {
-        if (err) console.log("write", err);
-      });
-
+      writeFileAsync(coverFile, jsonData);
     })
-    .catch(err => { });
+    .catch(err => {});
 };
 
-export { exportResults, readFileAsync, fs_writeFile };
+export { exportResults, readFileAsync, writeFileAsync };
