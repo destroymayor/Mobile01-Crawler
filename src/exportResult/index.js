@@ -1,5 +1,5 @@
-import fs from "fs";
-import util from "util";
+const fs = require("fs");
+const util = require("util");
 const fs_writeFile = util.promisify(fs.writeFileSync);
 
 // read file async
@@ -37,4 +37,4 @@ const exportResults = (parsedResults, coverFile) => {
     .catch(err => {});
 };
 
-export { exportResults, readFileAsync, writeFileAsync };
+module.exports = { exportResults, readFileAsync, writeFileAsync };

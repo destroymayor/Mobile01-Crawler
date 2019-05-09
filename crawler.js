@@ -1,8 +1,10 @@
-import axios from "axios";
-import cheerio from "cheerio";
+const axios = require("axios");
+const cheerio = require("cheerio");
 
-import { exportResults, readFileAsync, writeFileAsync } from "./src/exportResult";
-import { waitFor, asyncForEach } from "./src/delayFunction";
+//寫入檔案
+const { exportResults, readFileAsync, writeFileAsync } = require("./src/exportResult");
+//延遲執行
+const { waitFor, asyncForEach } = require("./src/delayFunction");
 
 const getWebSiteContent = async (url, coverFile) => {
   const linkList = [];
@@ -55,18 +57,20 @@ const getWebSiteContent = async (url, coverFile) => {
         })
       )
     )
-    .then(page => console.log("Save Success!", page[0], ", Time:", new Date().toTimeString().split(" ")[0]));
+    .then(page => {
+      console.log("Save Success!", page[0], ", Time:", new Date().toTimeString().split(" ")[0]);
+    });
 };
 
 // forum = 討論區代號
 // total = 該討論區總共頁數
-const startCrawler = async (forum, totalCode) => {
-  const outputPath = "./output/" + forum + ".json";
+const startCrawler = async (forum, StartPage, totalCode) => {
+  const outputPath = "./output/" + forum + "_" + Math.floor(Math.random() * (99 - 10 + 1)) + 10 + ".json";
   //預先創建一個json來儲存資料
   writeFileAsync(outputPath, []);
 
   const list = [];
-  for (let i = 1; i <= totalCode; i++) list.push(i);
+  for (let i = StartPage; i <= totalCode; i++) list.push(i);
 
   await asyncForEach(list, async num => {
     await waitFor(5000);
@@ -90,11 +94,9 @@ const fileMerger = (mainFile, mergerFile) => {
       });
 
       console.log("total length ", mainDataList.length);
-      fs_writeFile(mainFile, JSON.stringify(mainDataList, null, 2), err => {
-        if (err) console.log("write", err);
-      });
+      writeFileAsync(mainFile, mainDataList);
     });
   });
 };
 
-export { startCrawler, fileMerger };
+module.exports = { startCrawler, fileMerger };

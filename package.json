@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "babel-watch index.js",
+    "dev": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "push": "git add . && git ci -m . && git push -u origin master"
   },
@@ -15,19 +15,20 @@
     "axios",
     "cheerio"
   ],
-  "author": "",
+  "author": "Jared",
   "license": "MIT",
   "devDependencies": {
-    "babel-core": "^6.26.3",
-    "babel-plugin-transform-es2015-destructuring": "^6.23.0",
-    "babel-plugin-transform-es2015-modules-commonjs": "^6.26.2",
-    "babel-plugin-transform-es2015-parameters": "^6.24.1",
-    "babel-plugin-transform-es2015-spread": "^6.22.0",
-    "babel-plugin-transform-strict-mode": "^6.24.1",
-    "babel-watch": "^2.0.7"
+    "@babel/core": "7.4.4",
+    "babel-plugin-transform-es2015-destructuring": "6.23.0",
+    "babel-plugin-transform-es2015-modules-commonjs": "6.26.2",
+    "babel-plugin-transform-es2015-parameters": "6.24.1",
+    "babel-plugin-transform-es2015-spread": "6.22.0",
+    "babel-plugin-transform-strict-mode": "6.24.1",
+    "babel-watch": "7.0.0"
   },
   "dependencies": {
-    "axios": "^0.18.0",
-    "cheerio": "^1.0.0-rc.2"
+    "axios": "0.18.0",
+    "cheerio": "1.0.0-rc.2",
+    "commander": "2.20.0"
   }
 }

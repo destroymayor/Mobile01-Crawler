@@ -6,4 +6,4 @@ const asyncForEach = async (array, callback) => {
   }
 };
 
-export { waitFor, asyncForEach };
+module.exports = { waitFor, asyncForEach };
